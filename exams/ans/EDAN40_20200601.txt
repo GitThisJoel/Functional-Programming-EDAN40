@@ -1,0 +1,121 @@
+1. point-free
+
+Rewrite the following two definitions into a point-free form, i.e.,
+f = ...,
+g = ...,
+using neither lambda-expressions nor list comprehensions nor
+enumeration nor where-clause nor let-clause:
+
+f x y = x / (5 - y)
+g x y = [x z | z <- [3,7..y]]
+
+ANS 1.
+(0.4p) f = flip $ (flip (/)).(5-)
+(0.6p) g = flip $ (flip map) . (flip takeWhile $ iterate (+4) 3) . (>=)
+
+---------------
+
+2. Provide the types and explain the results of applying the following functions: seq, pseq, par.
+
+ANS 2.
+(0.25) seq, pseq, par ;; a -> b -> b
+(0.25) seq: evaluates 1st arg to WHNF, returns the second (immediately)
+(0.25) par: evaulates 1st arg to WHNF in parallel (creating a spark) with evaluating the 2nd arg
+(0.25) pseq: evaluates the 1st arg (up to WHNF) and only THEN returns the second
+
+------------------------------------------------------------
+1. What is the effect and type of:
+(0.2p each)
+
+1.1. uncurry ($)
+
+:: (a->b,a) -> b
+takes a pair: (funtion, argument) and returns the result of applying this function to the argument
+
+1.2. uncurry (:)
+
+:: (a,[a]) -> [a]
+takes a pair (elem::a, list::[a]) and returns the list with elem inserted at the front
+
+1.3. uncurry (.)
+
+:: (b->c,a->b) -> a -> c
+takes a pair of functions (suitably typed) and returns their composition
+
+1.4. uncurry uncurry
+
+:: (a->b->c, (a,b)) -> c
+takes the pair (2-arg function in curried form, pair of arguments) and returns the result of applying the function consecutively to the first and second elem of the pair
+
+1.5. curry uncurry
+
+TYPE ERROR
+
+
+
+2. The definition of a Functor class looks as follows:
+
+class Functor f where
+  fmap :: (a -> b) -> f a -> f b
+As we know, the functors to behave correctly should obey the following functor laws:
+
+fmap id = id
+fmap (f . g) = (fmap f) . (fmap g)
+Define an incorrect functor of your choice, i.e., provide a correct Haskell code defining a functor in such a way that the functor laws are NOT satisfied. Show that the laws do not hold.
+
+ANS 2.
+Many possibilities here.
+
+A classical example is taking lists and defining fmap as follows:
+
+fmap g [] = []
+fmap g (x:xs) = (fmap g xs) ++ [g x]
+
+And showing that the second law does not hold. 
+
+But: almost any function except map will do here (for lists, of course).
+
+
+3.-9. - autochecking, up to 1p (this is the only false one: map f . sort = sort . map f)
+
+------------------------------------------------------------
+1. Implement a data structure for sets over an arbitrary type a, with the following operations:
+
+union, intersection, difference :: Set a -> Set a -> Set a
+cartesian_product :: Set a -> Set b -> Set (a, b)
+member :: a -> Set a -> Bool
+insert :: a -> Set a -> Set a
+
+Make sure that your Set is a functor, by providing proper declaration for this property.
+
+ANS 1.
+
+Here again there is room for creativity. In principle two possibilities:
+lists with repetition (check equality!) or without repetition (check insertion, union, etc).
+Deriving equality might be an issue in general.
+
+An interesting issue was pointed by a student: sets are not a
+functor. But this is not true (at least not completely). There is
+positive, trivial answer to this question, below.
+
+Another issue, which I neglect while checking, is that fmap may create duplicates in
+a Set, thus effectively shrinking it. In non-repetition implementations this
+should be taken care of!
+
+So, an example:
+
+(0.1) data Set a = Set [a]
+(0.1) deriving (Eq) somewhere (member is a good place)
+(0.1) union (Set xs) (Set ys) = Set $ nub (xs ++ ys)
+(0.1) difference (Set xs) (Set ys) = Set (xs \\ ys)
+(0.1) intersection (Set xs) (Set ys) = difference (Set xs) (difference (Set xs) (Set ys))
+(0.1) cartprod (Set xs) (Set ys) = Set $ [(x,y) | x <- xs, y <- ys]
+(0.1) member e (Set xs) = elem  e xs
+(0.1) insert e (Set xs) 
+          | member e (Set xs) = Set xs
+          | Set (e:xs)
+(0.2) instance Functor Set where 
+          fmap g (Set xs) = Set $ nub $ map g xs
+
+
+
