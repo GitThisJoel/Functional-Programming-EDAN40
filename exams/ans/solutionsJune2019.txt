@@ -90,7 +90,7 @@ Assignment :: String -> Expression -> Statement
 
 -- probably not completely correct, untested version, but definitely satisfactory
 assignment input = do
-                       (var , rest1 ) <- word input
+                   (var, rest1) <- word input
 		       (foo, rest2) <- accept ":=" rest1
 		       (val, rest3) <- Expr.parse rest2
 		       (bar, rest4) <- require ";" rest3
