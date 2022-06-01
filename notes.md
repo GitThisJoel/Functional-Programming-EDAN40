@@ -87,7 +87,12 @@ do [1,2,3]; []; return "abc" -- => []
 <*>
 <$>
 
-## data types
+## Sparks and parallelization
+- `spark`: "potential of a thread"
+- `seq`: forces evaluation its first argument up to WHNF, has value of the second argument
+- `pseq`: forces evaluation its first argument up to WHNF **before** returning value of the second argument
+- `par`: evaluates its first argument up to WHNF, possibly in parallel (creates a spark) with returning value of the second argument
+
 
 ## Some functions and types:
 
