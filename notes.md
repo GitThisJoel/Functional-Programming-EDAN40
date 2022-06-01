@@ -39,37 +39,56 @@ instance Functor Tree where
 
 ## Monads 
 
+```haskell
+class Monad m where 
+  return a -> m a 
+  
+  (>>=) :: m a -> (a -> m b) -> m b
+
+  (>>) :: m a -> m b -> m b
+  x >> y = x >>= \_ -> y
+
+  fail :: String -> m a  
+  fail msg = error msg
+```
+
+A monad for `Maybe`
+```haskell
+class Monad Maybe where 
+  return x      = Just x
+  Nothing >>= f = Nothing
+  Just x  >>= f = f x 
+  fail _        = Nothing
+```
+
 ### do-notaton
+```haskell
+do [1,2,3]; []; "abc" -- => ""
+-- equal to
+do {
+  [1,2,3]; 
+  do {
+    []; -- since this one is empty it is the same as Nothing, thus output = ""
+    do {
+      "abc"
+    }
+  }
+}
+```
+
+```haskell
+do [1,2,3]; []; return "abc" -- => []
+```
+
+`return` takes something and wraps it in a monad, like `pure` for applicatives.
+
+## Applicative 
+
+<*>
+<$>
 
 ## data types
 
 ## Some functions and types:
->>= 
->>
-<*>
 
-## Terms
-
-### Curried
-
-### Dot free notation
-
-### Polymorphic types
-
-### IO
-
-### do-notation
-
-### Modules
-
-### Union types
-
-### Maybe
-
-### foldl, foldr, scanl, scanr
-
-### zip
-
-### Type derivation
-
-### sparks
+## Type derivation
