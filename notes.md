@@ -93,6 +93,13 @@ do [1,2,3]; []; return "abc" -- => []
 - `pseq`: forces evaluation its first argument up to WHNF **before** returning value of the second argument
 - `par`: evaluates its first argument up to WHNF, possibly in parallel (creates a spark) with returning value of the second argument
 
+## Subclasses
+```haskell
+instance (Eq m) => Eq (Maybe m) where 
+  Just x == Just y = x == y
+  Nothing == Nothing = True 
+  _ == _ = False
+```
 
 ## Some functions and types:
 
