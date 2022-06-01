@@ -40,5 +40,41 @@ myLength :: Tree3 String -> Tree3 Int
 myLength = fmap length
 
 
+-- 3.
+-- Point free notation
+-- f x y = (3 - y) * x
+f = flip $ (*).(3-) 
+-- g x y = map x $ filter (<3) y
+g = flip $ (flip map) . (filter (<3))
 
 
+-- 4.
+-- The first one evaluates just one element in each sublist, almost everything is sequential.
+
+-- Correct!
+-- because par and pseq enforce evaluation only to the WHNF, i.e. the head  of lists lesser and greater, yielding no useful paralellisation
+-- what is missing is "force" evaluating the whole spine of a list
+
+
+-- 5.
+-- a)
+-- word   :: Parser String 
+-- #-     :: Parser a -> Parser b -> Parser a 
+-- accept :: String -> String String
+-- #      :: Parser a -> Parser b -> Parser (a, b) 
+-- Expr.parse :: Parser a 
+--    Correct => Parser Expression
+-- require    :: String -> Parser String
+-- >->    :: Parser a -> (a -> b) -> Parser b
+-- buildAss   :: 
+--    Correct => (String, Expression) -> Statement
+-- Assignment :: Parser Statement
+--    Correct => String -> Expression -> Statement 
+
+-- b) 
+assignment input = do
+  (var, rest1) <- word input
+  (foo, rest2) <- accept ":=" rest1 
+  (val, rest3) <- Expr.parse rest2
+  (bar, rest4) <- require ";" rest3
+  return (buildAss (var, val)) rest4  
