@@ -53,7 +53,9 @@ instance Num MyNatural where
 -- ABOVE IS WRONG, BELOW IS CORRECT!
 --
 -- a. Version 1 is much faster than Version 2
--- b. because in version 1 the computation of simEntry i j is using the tabularized values, while in version 2 it recursively attempts to compute the value, without referring to earlier computations/table positions.
+-- b. because in version 1 the computation of simEntry i j is using the tabularized values, 
+-- while in version 2 it recursively attempts to compute the value, 
+-- without referring to earlier computations/table positions.
 --
 -- in ver 2 a new table is created for each item in maximum
 
